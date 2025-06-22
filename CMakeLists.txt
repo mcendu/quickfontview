@@ -11,6 +11,8 @@ include(ECMFindQmlModule)
 include(ECMQmlModule)
 include(KDEClangFormat)
 
+find_package(PkgConfig REQUIRED)
+
 find_package(Qt6 REQUIRED COMPONENTS
     Core
     Quick
@@ -27,6 +29,8 @@ find_package(KF6 REQUIRED COMPONENTS
     QQC2DesktopStyle
     IconThemes
 )
+
+pkg_check_modules(HARFBUZZ REQUIRED harfbuzz)
 
 ecm_find_qmlmodule(org.kde.kirigami REQUIRED)
 

@@ -19,6 +19,7 @@ ecm_target_qml_sources(quickfontview
 
 target_link_libraries(quickfontview
     PRIVATE
+    ${HARFBUZZ_LIBRARIES}
     Qt6::Quick
     Qt6::Qml
     Qt6::Gui
