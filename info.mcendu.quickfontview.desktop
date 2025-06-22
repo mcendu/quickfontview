@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=QuickFontView
+Comment=Font preview
+Comment[zh_CN]=字体预览
+Exec=quickfontview
+Icon=kde
+Type=Application
+Terminal=false
+Categories=Utility

@@ -1,0 +1,11 @@
+# clangd
+.cache
+
+# default builddir path
+build/
+
+# ECM
+.clang-format
+
+# Visual Studio Code (Code - OSS, VSCodium, etc.)
+.vscode/
