@@ -13,7 +13,7 @@ include(KDEClangFormat)
 
 find_package(PkgConfig REQUIRED)
 
-find_package(Qt6 REQUIRED COMPONENTS
+find_package(Qt6 6.7 REQUIRED COMPONENTS
     Core
     Quick
     Test
