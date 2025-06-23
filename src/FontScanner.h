@@ -28,4 +28,13 @@ inline const FontFeatures *scanFontFeatures(const QString &path, size_t index)
     return scanFontFeatures(path.toLocal8Bit().data(), index);
 }
 
+class FontScanner : public QObject
+{
+    Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
+public:
+    Q_INVOKABLE const QmlFontFeatures *scan(const QString &path, size_t index);
+};
+
 #endif

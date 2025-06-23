@@ -73,3 +73,13 @@ static QHash<QString, VariableAxis *> scanVariableAxes(hb_face_t *face)
 
     return axes;
 }
+
+const QmlFontFeatures *FontScanner::scan(const QString &path, size_t index)
+{
+    auto features = scanFontFeatures(path, index);
+    if (!features) {
+        return nullptr;
+    }
+
+    return new QmlFontFeatures(std::move(*features));
+}
