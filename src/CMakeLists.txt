@@ -12,6 +12,7 @@ target_sources(quickfontview
 
 ecm_target_qml_sources(quickfontview
     SOURCES
+    FeaturesDrawer.qml
     FontPage.qml
     FontView.qml
     Main.qml

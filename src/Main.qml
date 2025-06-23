@@ -23,5 +23,5 @@ Kirigami.ApplicationWindow {
 
     // Set the first page that will be loaded when the app opens
     // This can also be set to an id of a Kirigami.Page
-    pageStack.initialPage: Qt.resolvedUrl("FontPage.qml")
+    pageStack.initialPage: FontPage {}
 }

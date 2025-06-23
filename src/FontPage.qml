@@ -9,7 +9,10 @@ import QtQuick.Controls as Controls
 import org.kde.kirigami as Kirigami
 
 Kirigami.Page {
+    id: page
+
     property string fontPath: "/usr/share/fonts/google-noto/NotoSans-Italic.ttf"
+    property FontFeatures availableFeatures: FontScanner.scan(fontPath, 0)
 
     FontLoader {
         id: loader
@@ -18,16 +21,30 @@ Kirigami.Page {
 
     title: loader.font.family
 
+    FontView {
+        font: loader.font
+    }
+
+    FeaturesDrawer {
+        id: featuresDrawer
+        availableFeatures: page.availableFeatures
+        features: loader.font.features
+        variableAxes: loader.font.variableAxes
+    }
+
     actions: [
         Kirigami.Action {
             id: previewOptionsAction
             icon.name: "adjustlevels-symbolic"
             text: i18n("Font features")
+            onTriggered: function() {
+                if (featuresDrawer.visible) {
+                    featuresDrawer.close();
+                } else {
+                    featuresDrawer.open();
+                }
+            }
         }
     ]
-
-    FontView {
-        font: loader.font
-    }
 }
     
