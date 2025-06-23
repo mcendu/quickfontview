@@ -8,13 +8,19 @@
 
 #include <QAbstractListModel>
 #include <QByteArray>
+#include <QtQmlIntegration>
 #include <utility>
 
 class FontFeatureModel : public QAbstractListModel
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_UNCREATABLE("Use FontScanner to query font features.")
 private:
     QList<QString> m_features;
+
+protected:
+    QHash<int, QByteArray> roleNames() const override;
 
 public:
     enum Roles {
@@ -27,7 +33,6 @@ public:
     {
     }
 
-    QHash<int, QByteArray> roleNames() const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role) const override;
 };

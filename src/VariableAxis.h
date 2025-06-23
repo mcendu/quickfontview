@@ -62,8 +62,13 @@ inline size_t qHash(const VariableAxis &key, size_t seed)
 class VariableAxisModel : public QAbstractListModel
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_UNCREATABLE("Use FontScanner to query font features.")
 private:
     QList<VariableAxis *> m_axes;
+
+protected:
+    QHash<int, QByteArray> roleNames() const override;
 
 public:
     enum Roles {
@@ -79,7 +84,6 @@ public:
     {
     }
 
-    QHash<int, QByteArray> roleNames() const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role) const override;
 };

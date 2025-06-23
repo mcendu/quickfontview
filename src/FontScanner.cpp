@@ -12,6 +12,8 @@
 #include <QVarLengthArray>
 #include <harfbuzz/hb-ot.h>
 #include <harfbuzz/hb.h>
+#include <algorithm>
+#include <utility>
 
 const FontFeatureModel *FontScanner::scanFeatures(const QString &path, size_t index)
 {
@@ -20,9 +22,10 @@ const FontFeatureModel *FontScanner::scanFeatures(const QString &path, size_t in
         return new FontFeatureModel(QList<QString>());
     }
 
-    auto features = scanFeaturesRaw(face);
+    auto features = scanFeaturesRaw(face).values();
     hb_face_destroy(face);
-    return new FontFeatureModel(features.values());
+    std::sort(features.begin(), features.end());
+    return new FontFeatureModel(std::move(features));
 }
 
 QSet<QString> FontScanner::scanFeaturesRaw(hb_face_t *face)
@@ -54,9 +57,10 @@ const VariableAxisModel *FontScanner::scanVariableAxes(const QString &path, size
         return new VariableAxisModel(QList<VariableAxis *>());
     }
 
-    auto axes = scanVariableAxesRaw(face);
+    auto axes = scanVariableAxesRaw(face).values();
     hb_face_destroy(face);
-    return new VariableAxisModel(axes.values());
+    std::sort(axes.begin(), axes.end());
+    return new VariableAxisModel(std::move(axes));
 }
 
 QHash<QString, VariableAxis *> FontScanner::scanVariableAxesRaw(hb_face_t *face)
