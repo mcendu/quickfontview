@@ -3,14 +3,14 @@
 
     SPDX-License-Identifier: GPL-3.0-or-later
 */
-#include <QApplication>
-#include <QQmlApplicationEngine>
-#include <QtQml>
-#include <QUrl>
-#include <QQuickStyle>
+#include <KIconTheme>
 #include <KLocalizedContext>
 #include <KLocalizedString>
-#include <KIconTheme>
+#include <QApplication>
+#include <QQmlApplicationEngine>
+#include <QQuickStyle>
+#include <QUrl>
+#include <QtQml>
 
 int main(int argc, char *argv[])
 {

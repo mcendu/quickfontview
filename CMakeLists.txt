@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.26)
 project(quickfontview)
+ENABLE_TESTING()
 
 find_package(ECM 6.0.0 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
@@ -35,6 +36,7 @@ pkg_check_modules(HARFBUZZ REQUIRED harfbuzz)
 ecm_find_qmlmodule(org.kde.kirigami REQUIRED)
 
 add_subdirectory(src)
+add_subdirectory(tests)
 
 file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h *.hpp *.c)
 kde_clang_format(${ALL_CLANG_FORMAT_SOURCE_FILES})

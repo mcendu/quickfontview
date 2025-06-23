@@ -7,6 +7,8 @@ ecm_add_qml_module(quickfontview
 
 target_sources(quickfontview
     PRIVATE
+    FontFeatures.cpp
+    FontScanner.cpp
     main.cpp
 )
 
