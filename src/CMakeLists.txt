@@ -3,7 +3,7 @@ add_executable(quickfontview)
 ecm_add_qml_module(quickfontview
     URI info.mcendu.quickfontview
     SOURCES
-    FontFeatures.cpp
+    FontFeature.cpp
     FontScanner.cpp
     VariableAxis.cpp
 )

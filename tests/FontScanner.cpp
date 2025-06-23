@@ -6,8 +6,8 @@
 #include <FontScanner.h>
 
 #include <QObject>
-#include <QScopedPointer>
 #include <QTest>
+#include <harfbuzz/hb.h>
 
 class testFontScanner : public QObject
 {
@@ -19,21 +19,28 @@ private Q_SLOTS:
 
 void testFontScanner::enumerate()
 {
-    auto features = QScopedPointer(scanFontFeatures("resources/NotoSans-Regular.ttf", 0));
-    QCOMPARE_NE(features.get(), nullptr);
-    QVERIFY(!features->features().isEmpty());
-    QVERIFY(features->features().contains(QString::fromUtf8(u8"liga")));
+    hb_face_t *face = hb_face_create_from_file_or_fail("resources/NotoSans-Regular.ttf", 0);
+    QVERIFY(face);
+    auto features = FontScanner::scanFeaturesRaw(face);
+    hb_face_destroy(face);
+
+    QVERIFY(!features.isEmpty());
+    QVERIFY(features.contains(QString::fromUtf8(u8"liga")));
 }
 
 void testFontScanner::variableFont()
 {
-    auto features = QScopedPointer(scanFontFeatures("resources/RobotoFlex.ttf", 0));
-    QCOMPARE_NE(features.get(), nullptr);
-    QVERIFY(!features->features().isEmpty());
-    QVERIFY(features->features().contains(QString::fromUtf8(u8"liga")));
-    QVERIFY(!features->axes().isEmpty());
-    QVERIFY(features->axes().contains(QString::fromUtf8(u8"wght")));
-    QVERIFY(features->axes().contains(QString::fromUtf8(u8"GRAD")));
+    hb_face_t *face = hb_face_create_from_file_or_fail("resources/RobotoFlex.ttf", 0);
+    QVERIFY(face);
+    auto features = FontScanner::scanFeaturesRaw(face);
+    auto axes = FontScanner::scanVariableAxesRaw(face);
+    hb_face_destroy(face);
+
+    QVERIFY(!features.isEmpty());
+    QVERIFY(features.contains(QString::fromUtf8(u8"liga")));
+    QVERIFY(!axes.isEmpty());
+    QVERIFY(axes.contains(QString::fromUtf8(u8"wght")));
+    QVERIFY(axes.contains(QString::fromUtf8(u8"GRAD")));
 }
 
 QTEST_MAIN(testFontScanner)

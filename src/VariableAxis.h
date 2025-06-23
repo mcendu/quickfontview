@@ -9,6 +9,7 @@
 #include <QObject>
 #include <QtQmlIntegration>
 #include <QString>
+#include <QAbstractListModel>
 
 class VariableAxis : public QObject
 {
@@ -57,5 +58,30 @@ inline size_t qHash(const VariableAxis &key, size_t seed)
 {
     return qHash(key.tag(), seed);
 }
+
+class VariableAxisModel : public QAbstractListModel
+{
+    Q_OBJECT
+private:
+    QList<VariableAxis *> m_axes;
+
+public:
+    enum Roles {
+        TagRole = Qt::UserRole + 1,
+        MinValueRole,
+        MaxValueRole,
+        DefaultValueRole,
+    };
+
+    VariableAxisModel(QList<VariableAxis *> &&axes, QObject *parent = nullptr)
+        : QAbstractListModel(parent)
+        , m_axes(std::move(axes))
+    {
+    }
+
+    QHash<int, QByteArray> roleNames() const override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
+};
 
 #endif

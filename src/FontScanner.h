@@ -6,27 +6,12 @@
 #ifndef QFV_FONTSCANNER_H
 #define QFV_FONTSCANNER_H
 
-#include "FontFeatures.h"
+#include "FontFeature.h"
+#include "VariableAxis.h"
 #include <QString>
 #include <QVariant>
 #include <harfbuzz/hb.h>
-
-const FontFeatures *scanFontFeatures(hb_blob_t *blob, size_t index);
-
-inline const FontFeatures *scanFontFeatures(const void *blob, size_t size, size_t index)
-{
-    return scanFontFeatures(hb_blob_create_or_fail((const char *)blob, size, HB_MEMORY_MODE_READONLY, nullptr, nullptr), index);
-}
-
-inline const FontFeatures *scanFontFeatures(const char *path, size_t index)
-{
-    return scanFontFeatures(hb_blob_create_from_file_or_fail(path), index);
-}
-
-inline const FontFeatures *scanFontFeatures(const QString &path, size_t index)
-{
-    return scanFontFeatures(path.toLocal8Bit().data(), index);
-}
+#include <qtmetamacros.h>
 
 class FontScanner : public QObject
 {
@@ -34,7 +19,11 @@ class FontScanner : public QObject
     QML_ELEMENT
     QML_SINGLETON
 public:
-    Q_INVOKABLE const QmlFontFeatures *scan(const QString &path, size_t index);
+    Q_INVOKABLE static const FontFeatureModel *scanFeatures(const QString &path, size_t index);
+    Q_INVOKABLE static const VariableAxisModel *scanVariableAxes(const QString &path, size_t index);
+
+    static QSet<QString> scanFeaturesRaw(hb_face_t *face);
+    static QHash<QString, VariableAxis *> scanVariableAxesRaw(hb_face_t *face);
 };
 
 #endif

@@ -4,33 +4,28 @@
     SPDX-License-Identifier: GPL-3.0-or-later
 */
 #include "FontScanner.h"
-#include "FontFeatures.h"
+
+#include "FontFeature.h"
+#include "VariableAxis.h"
 #include <QHash>
 #include <QSet>
 #include <QVarLengthArray>
 #include <harfbuzz/hb-ot.h>
 #include <harfbuzz/hb.h>
 
-static QSet<QString> scanFeatures(hb_face_t *face);
-static QHash<QString, VariableAxis *> scanVariableAxes(hb_face_t *face);
-
-const FontFeatures *scanFontFeatures(hb_blob_t *blob, size_t index)
+const FontFeatureModel *FontScanner::scanFeatures(const QString &path, size_t index)
 {
-    if (!blob) {
-        return nullptr;
-    }
-
-    hb_face_t *face = hb_face_create_or_fail(blob, index);
+    hb_face_t *face = hb_face_create_from_file_or_fail(path.toLocal8Bit().data(), index);
     if (!face) {
-        return nullptr;
+        return new FontFeatureModel(QList<QString>());
     }
 
-    auto features = new FontFeatures(scanFeatures(face), scanVariableAxes(face));
+    auto features = scanFeaturesRaw(face);
     hb_face_destroy(face);
-    return features;
+    return new FontFeatureModel(features.values());
 }
 
-static QSet<QString> scanFeatures(hb_face_t *face)
+QSet<QString> FontScanner::scanFeaturesRaw(hb_face_t *face)
 {
     constexpr unsigned int maxCount = 32;
 
@@ -52,7 +47,19 @@ static QSet<QString> scanFeatures(hb_face_t *face)
     return features;
 }
 
-static QHash<QString, VariableAxis *> scanVariableAxes(hb_face_t *face)
+const VariableAxisModel *FontScanner::scanVariableAxes(const QString &path, size_t index)
+{
+    hb_face_t *face = hb_face_create_from_file_or_fail(path.toLocal8Bit().data(), index);
+    if (!face) {
+        return new VariableAxisModel(QList<VariableAxis *>());
+    }
+
+    auto axes = scanVariableAxesRaw(face);
+    hb_face_destroy(face);
+    return new VariableAxisModel(axes.values());
+}
+
+QHash<QString, VariableAxis *> FontScanner::scanVariableAxesRaw(hb_face_t *face)
 {
     if (!hb_ot_var_has_data(face))
         return QHash<QString, VariableAxis *>{};
@@ -72,14 +79,4 @@ static QHash<QString, VariableAxis *> scanVariableAxes(hb_face_t *face)
     }
 
     return axes;
-}
-
-const QmlFontFeatures *FontScanner::scan(const QString &path, size_t index)
-{
-    auto features = scanFontFeatures(path, index);
-    if (!features) {
-        return nullptr;
-    }
-
-    return new QmlFontFeatures(std::move(*features));
 }

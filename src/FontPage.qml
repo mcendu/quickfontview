@@ -12,7 +12,6 @@ Kirigami.Page {
     id: page
 
     property string fontPath: "/usr/share/fonts/google-noto/NotoSans-Italic.ttf"
-    property FontFeatures availableFeatures: FontScanner.scan(fontPath, 0)
 
     FontLoader {
         id: loader
@@ -27,7 +26,6 @@ Kirigami.Page {
 
     FeaturesDrawer {
         id: featuresDrawer
-        availableFeatures: page.availableFeatures
         features: loader.font.features
         variableAxes: loader.font.variableAxes
     }

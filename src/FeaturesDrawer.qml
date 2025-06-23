@@ -9,7 +9,6 @@ import QtQuick.Controls as Controls
 import org.kde.kirigami as Kirigami
 
 Kirigami.OverlayDrawer {
-    required property FontFeatures availableFeatures
     property var features
     property var variableAxes
 
