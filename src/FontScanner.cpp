@@ -6,26 +6,26 @@
 #include "FontScanner.h"
 #include "FontFeatures.h"
 #include <QHash>
+#include <QSet>
 #include <QVarLengthArray>
-#include <QVariant>
 #include <harfbuzz/hb-ot.h>
 #include <harfbuzz/hb.h>
-#include <memory>
-#include <qcontainerfwd.h>
-
-using std::unique_ptr;
 
 static QSet<QString> scanFeatures(hb_face_t *face);
 static QHash<QString, VariableAxis *> scanVariableAxes(hb_face_t *face);
 
-unique_ptr<const FontFeatures> scanFontFeatures(hb_blob_t *blob, size_t index)
+const FontFeatures *scanFontFeatures(hb_blob_t *blob, size_t index)
 {
-    hb_face_t *face = hb_face_create_or_fail(blob, index);
-    if (!face) {
-        return unique_ptr<const FontFeatures>();
+    if (!blob) {
+        return nullptr;
     }
 
-    unique_ptr<const FontFeatures> features(new FontFeatures(scanFeatures(face), scanVariableAxes(face)));
+    hb_face_t *face = hb_face_create_or_fail(blob, index);
+    if (!face) {
+        return nullptr;
+    }
+
+    auto features = new FontFeatures(scanFeatures(face), scanVariableAxes(face));
     hb_face_destroy(face);
     return features;
 }

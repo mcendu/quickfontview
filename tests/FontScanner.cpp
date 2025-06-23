@@ -5,9 +5,9 @@
 */
 #include <FontScanner.h>
 
-#include <QTest>
 #include <QObject>
-#include <qtestcase.h>
+#include <QScopedPointer>
+#include <QTest>
 
 class testFontScanner : public QObject
 {
@@ -19,7 +19,7 @@ private Q_SLOTS:
 
 void testFontScanner::enumerate()
 {
-    auto features = scanFontFeatures("resources/NotoSans-Regular.ttf", 0);
+    auto features = QScopedPointer(scanFontFeatures("resources/NotoSans-Regular.ttf", 0));
     QCOMPARE_NE(features.get(), nullptr);
     QVERIFY(!features->features().isEmpty());
     QVERIFY(features->features().contains(QString::fromUtf8(u8"liga")));
@@ -27,7 +27,7 @@ void testFontScanner::enumerate()
 
 void testFontScanner::variableFont()
 {
-    auto features = scanFontFeatures("resources/RobotoFlex.ttf", 0);
+    auto features = QScopedPointer(scanFontFeatures("resources/RobotoFlex.ttf", 0));
     QCOMPARE_NE(features.get(), nullptr);
     QVERIFY(!features->features().isEmpty());
     QVERIFY(features->features().contains(QString::fromUtf8(u8"liga")));

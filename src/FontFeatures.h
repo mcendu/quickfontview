@@ -12,16 +12,17 @@
 #include <QObject>
 #include <QSet>
 #include <QString>
-#include <qcontainerfwd.h>
+#include <QtQmlIntegration>
 #include <utility>
 
 class VariableAxis : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString tag MEMBER m_tag READ tag)
-    Q_PROPERTY(qreal min MEMBER m_min READ minValue)
-    Q_PROPERTY(qreal max MEMBER m_max READ maxValue)
-    Q_PROPERTY(qreal default MEMBER m_default READ defaultValue)
+    QML_ELEMENT
+    Q_PROPERTY(QString tag READ tag)
+    Q_PROPERTY(qreal minValue READ minValue)
+    Q_PROPERTY(qreal maxValue READ maxValue)
+    Q_PROPERTY(qreal defaultValue READ defaultValue)
 private:
     QString m_tag;
     qreal m_min;
@@ -35,19 +36,23 @@ public:
         , m_max(maxValue)
         , m_default(defaultValue) { };
 
-    const QString &tag() const {
+    const QString &tag() const
+    {
         return m_tag;
     }
 
-    qreal minValue() const {
+    qreal minValue() const
+    {
         return m_min;
     }
 
-    qreal maxValue() const {
+    qreal maxValue() const
+    {
         return m_max;
     }
 
-    qreal defaultValue() const {
+    qreal defaultValue() const
+    {
         return m_default;
     }
 };
@@ -57,8 +62,9 @@ size_t qHash(const VariableAxis &key, size_t seed);
 class FontFeatures : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QSet<QString> features MEMBER m_features READ features)
-    Q_PROPERTY(QHash<QString, VariableAxis *> variableAxes MEMBER m_axes READ axes)
+    QML_ELEMENT
+    Q_PROPERTY(QSet<QString> features READ features)
+    Q_PROPERTY(QHash<QString, VariableAxis *> variableAxes READ axes)
 private:
     QSet<QString> m_features;
     QHash<QString, VariableAxis *> m_axes;
@@ -70,11 +76,13 @@ public:
     {
     }
 
-    const QSet<QString> &features() const {
+    const QSet<QString> &features() const
+    {
         return m_features;
     }
 
-    const QHash<QString, VariableAxis *> &axes() const {
+    const QHash<QString, VariableAxis *> &axes() const
+    {
         return m_axes;
     }
 };
