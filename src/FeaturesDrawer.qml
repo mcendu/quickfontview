@@ -16,6 +16,7 @@ Kirigami.OverlayDrawer {
     required property VariableAxisModel axisModel
 
     signal axisChanged(string axis, real value)
+    signal featureChanged(string feature, bool enabled)
 
     edge: Qt.BottomEdge
     modal: false
@@ -43,13 +44,19 @@ Kirigami.OverlayDrawer {
             from: delegate.minValue
             to: delegate.maxValue
             value: delegate.defaultValue
+            stepSize: 1
+            snapMode: QQC.Slider.NoSnap
             onValueChanged: delegate.model.value = value
         }
     }
 
     contentItem: QQC.ScrollView {
+        contentWidth: availableWidth
+
         ColumnLayout {
             anchors.fill: parent
+            anchors.leftMargin: 10
+            anchors.rightMargin: 10
 
             Kirigami.Heading {
                 text: i18n("Variable axes")
@@ -79,9 +86,17 @@ Kirigami.OverlayDrawer {
                 model: drawer.featureModel
                 delegate: QQC.CheckDelegate {
                     required property string tag
+                    required property bool enabled
+                    required property var model
 
                     width: ListView.view.width
                     text: tag
+
+                    onCheckStateChanged: {
+                        model.enabled = checkState == Qt.Checked;
+                    }
+
+                    onEnabledChanged: drawer.featureChanged(tag, enabled)
                 }
             }
         }

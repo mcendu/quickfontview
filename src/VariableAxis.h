@@ -68,8 +68,10 @@ public:
 
     void setValue(qreal value)
     {
-        m_value = value;
-        valueChanged(value);
+        if (m_value != value) {
+            m_value = value;
+            valueChanged(value);
+        }
     }
 };
 

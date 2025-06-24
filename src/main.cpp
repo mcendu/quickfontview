@@ -12,8 +12,8 @@
 #include <QQmlApplicationEngine>
 #include <QQuickStyle>
 #include <QUrl>
-#include <QtQml>
 #include <QtLogging>
+#include <QtQml>
 
 int main(int argc, char *argv[])
 {

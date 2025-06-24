@@ -10,21 +10,33 @@
 #include <QHash>
 #include <QSet>
 #include <QVarLengthArray>
+#include <algorithm>
 #include <harfbuzz/hb-ot.h>
 #include <harfbuzz/hb.h>
-#include <algorithm>
 #include <utility>
+
+static auto featurePtrLess(const FontFeature *lhs, const FontFeature *rhs)
+{
+    return lhs->tag() < rhs->tag();
+}
 
 const FontFeatureModel *FontScanner::scanFeatures(const QString &path, size_t index)
 {
     hb_face_t *face = hb_face_create_from_file_or_fail(path.toLocal8Bit().data(), index);
     if (!face) {
-        return new FontFeatureModel(QList<QString>());
+        return new FontFeatureModel(QList<FontFeature *>());
     }
 
-    auto features = scanFeaturesRaw(face).values();
+    auto featureTags = scanFeaturesRaw(face).values();
     hb_face_destroy(face);
-    std::sort(features.begin(), features.end());
+
+    auto features = QList<FontFeature *>();
+    features.reserve(featureTags.size());
+    for (const QString &i : featureTags) {
+        features.append(new FontFeature(i));
+    }
+
+    std::sort(features.begin(), features.end(), featurePtrLess);
     return new FontFeatureModel(std::move(features));
 }
 
@@ -50,7 +62,8 @@ QSet<QString> FontScanner::scanFeaturesRaw(hb_face_t *face)
     return features;
 }
 
-static auto axisPtrLess(const VariableAxis *lhs, const VariableAxis *rhs) {
+static auto axisPtrLess(const VariableAxis *lhs, const VariableAxis *rhs)
+{
     return *lhs < *rhs;
 }
 

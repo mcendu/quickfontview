@@ -45,6 +45,12 @@ Kirigami.Page {
                 fontView.font.variableAxes[axis] = value;
             }
         }
+    
+        onFeatureChanged: function(feature, value) {
+            if (feature !== "") {
+                fontView.font.features[feature] = value;
+            }
+        }
     }
 
     actions: [

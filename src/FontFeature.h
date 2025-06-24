@@ -9,7 +9,46 @@
 #include <QAbstractListModel>
 #include <QByteArray>
 #include <QtQmlIntegration>
+#include <qcontainerfwd.h>
 #include <utility>
+
+class FontFeature : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QString tag READ tag CONSTANT)
+    Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY statusChanged)
+private:
+    QString m_tag;
+    bool m_enabled;
+
+Q_SIGNALS:
+    void statusChanged(bool enabled);
+
+public:
+    FontFeature(const QString &tag)
+        : m_tag(tag)
+        , m_enabled(false)
+    {
+    }
+
+    const QString &tag() const
+    {
+        return m_tag;
+    }
+
+    bool enabled() const
+    {
+        return m_enabled;
+    }
+
+    void setEnabled(bool enabled)
+    {
+        if (m_enabled != enabled) {
+            m_enabled = enabled;
+            statusChanged(enabled);
+        }
+    }
+};
 
 class FontFeatureModel : public QAbstractListModel
 {
@@ -17,7 +56,7 @@ class FontFeatureModel : public QAbstractListModel
     QML_ELEMENT
     QML_UNCREATABLE("Use FontScanner to query font features.")
 private:
-    QList<QString> m_features;
+    QList<FontFeature *> m_features;
 
 protected:
     QHash<int, QByteArray> roleNames() const override;
@@ -25,9 +64,10 @@ protected:
 public:
     enum Roles {
         TagRole = Qt::UserRole + 1,
+        EnabledRole,
     };
 
-    FontFeatureModel(QList<QString> &&tags, QObject *parent = nullptr)
+    FontFeatureModel(QList<FontFeature *> &&tags, QObject *parent = nullptr)
         : QAbstractListModel(parent)
         , m_features(std::move(tags))
     {
@@ -35,6 +75,7 @@ public:
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role) const override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 };
 
 #endif
