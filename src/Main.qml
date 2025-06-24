@@ -13,6 +13,8 @@ Kirigami.ApplicationWindow {
     // Unique identifier to reference this object
     id: root
 
+    required property string file
+
     width: 400
     height: 300
 
@@ -23,5 +25,7 @@ Kirigami.ApplicationWindow {
 
     // Set the first page that will be loaded when the app opens
     // This can also be set to an id of a Kirigami.Page
-    pageStack.initialPage: FontPage {}
+    pageStack.initialPage: FontPage {
+        file: root.file
+    }
 }

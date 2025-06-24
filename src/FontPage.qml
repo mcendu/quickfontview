@@ -9,26 +9,24 @@ import org.kde.kirigami as Kirigami
 Kirigami.Page {
     id: page
 
-    property string fontPath: "/usr/share/fonts/google-noto/NotoSans-Italic.ttf"
-    property FontFeatureModel featureModel: FontScanner.scanFeatures(fontPath, 0)
-    property VariableAxisModel axisModel: FontScanner.scanVariableAxes(fontPath, 0)
+    property string file
+    property FontFeatureModel featureModel: FontScanner.scanFeatures(file, 0)
+    property VariableAxisModel axisModel: FontScanner.scanVariableAxes(file, 0)
 
     function getFeatures() {
-        featureModel = FontScanner.scanFeatures(fontPath, 0);
-        axisModel = FontScanner.scanVariableAxes(fontPath, 0);
+        featureModel = FontScanner.scanFeatures(file, 0);
+        axisModel = FontScanner.scanVariableAxes(file, 0);
     }
 
     FontLoader {
         id: loader
-        source: `file:/${page.fontPath}`
+        source: `file://${page.file}`
         onStatusChanged: function() {
             if (status == FontLoader.Ready) {
                 page.getFeatures();
             }
         }
     }
-
-    onFontPathChanged: loader.source = `file:/${fontPath}`
 
     title: loader.font.family
 
@@ -43,7 +41,9 @@ Kirigami.Page {
         axisModel: page.axisModel
 
         onAxisChanged: function(axis, value) {
-            fontView.font.variableAxes[axis] = value;
+            if (axis !== "") {
+                fontView.font.variableAxes[axis] = value;
+            }
         }
     }
 
