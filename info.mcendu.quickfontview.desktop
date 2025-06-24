@@ -5,5 +5,6 @@ Comment[zh_CN]=字体预览
 Exec=quickfontview
 Icon=kfontview
 Type=Application
+MimeType=font/ttf;font/otf;font/collection
 Terminal=false
 Categories=Utility
