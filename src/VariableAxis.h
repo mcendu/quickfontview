@@ -6,10 +6,12 @@
 #ifndef QFV_VARIABLEAXIS_H
 #define QFV_VARIABLEAXIS_H
 
-#include <QObject>
-#include <QtQmlIntegration>
-#include <QString>
 #include <QAbstractListModel>
+#include <QObject>
+#include <QString>
+#include <QtQmlIntegration>
+#include <qabstractitemmodel.h>
+#include <qvariant.h>
 
 class VariableAxis : public QObject
 {
@@ -20,18 +22,24 @@ class VariableAxis : public QObject
     Q_PROPERTY(qreal minValue READ minValue CONSTANT)
     Q_PROPERTY(qreal maxValue READ maxValue CONSTANT)
     Q_PROPERTY(qreal defaultValue READ defaultValue CONSTANT)
+    Q_PROPERTY(qreal value READ value WRITE setValue NOTIFY valueChanged)
 private:
     QString m_tag;
     qreal m_min;
     qreal m_max;
     qreal m_default;
+    qreal m_value;
+
+Q_SIGNALS:
+    void valueChanged(qreal newValue);
 
 public:
     VariableAxis(QString tag, qreal minValue, qreal maxValue, qreal defaultValue)
         : m_tag(tag)
         , m_min(minValue)
         , m_max(maxValue)
-        , m_default(defaultValue) { };
+        , m_default(defaultValue)
+        , m_value(defaultValue) { };
 
     const QString &tag() const
     {
@@ -52,7 +60,23 @@ public:
     {
         return m_default;
     }
+
+    qreal value() const
+    {
+        return m_value;
+    }
+
+    void setValue(qreal value)
+    {
+        m_value = value;
+        valueChanged(value);
+    }
 };
+
+inline auto operator<=>(const VariableAxis &lhs, const VariableAxis &rhs)
+{
+    return lhs.tag() <=> rhs.tag();
+}
 
 inline size_t qHash(const VariableAxis &key, size_t seed)
 {
@@ -73,6 +97,7 @@ protected:
 public:
     enum Roles {
         TagRole = Qt::UserRole + 1,
+        ValueRole,
         MinValueRole,
         MaxValueRole,
         DefaultValueRole,
@@ -86,6 +111,7 @@ public:
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role) const override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 };
 
 #endif

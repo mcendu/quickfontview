@@ -16,11 +16,13 @@ ColumnLayout {
     Kirigami.Theme.colorSet: Kirigami.Theme.View
 
     component FontSizePreviewText: Controls.Label {
-        font.family: view.font.family
-        font.weight: view.font.weight
-        font.italic: view.font.italic
-        font.features: view.font.features
-        font.variableAxes: view.font.variableAxes
+        required property font previewFont
+        required property real pointSize
+
+        font.family: previewFont.family
+        font.features: previewFont.features
+        font.variableAxes: previewFont.variableAxes
+        font.pointSize: pointSize
 
         text: i18nc("Example text",
             "The quick brown fox jumps over the lazy dog. 0123456789")
@@ -28,8 +30,6 @@ ColumnLayout {
 
     Kirigami.Heading {
         font.family: view.font.family
-        font.weight: view.font.weight
-        font.italic: view.font.italic
         font.features: view.font.features
         font.variableAxes: view.font.variableAxes
 
@@ -39,29 +39,27 @@ ColumnLayout {
 
     Controls.Label {
         font.family: view.font.family
-        font.weight: view.font.weight
-        font.italic: view.font.italic
         font.features: view.font.features
         font.variableAxes: view.font.variableAxes
 
-        text: i18nc("The basic set of characters", "\
-            ABCDEFGHIJKLMNOPQRSTUVWXYZ<br />\
-            abcdefghijklmnopqrstuvwxyz<br />\
-            0123456789 .,'\":;!?/\+-_|=~[]{}()<>@#$%^&*`\
-        ")
+        text: i18nc("The basic set of characters", `
+            ABCDEFGHIJKLMNOPQRSTUVWXYZ<br />
+            abcdefghijklmnopqrstuvwxyz<br />
+            0123456789 .,'":;!?/\+-_|=~[]{}()<>@#$%^&*\`
+        `)
     }
 
-    FontSizePreviewText { font.pointSize: 10 }
-    FontSizePreviewText { font.pointSize: 12 }
-    FontSizePreviewText { font.pointSize: 14 }
-    FontSizePreviewText { font.pointSize: 16 }
-    FontSizePreviewText { font.pointSize: 20 }
-    FontSizePreviewText { font.pointSize: 24 }
-    FontSizePreviewText { font.pointSize: 28 }
-    FontSizePreviewText { font.pointSize: 32 }
-    FontSizePreviewText { font.pointSize: 40 }
-    FontSizePreviewText { font.pointSize: 48 }
-    FontSizePreviewText { font.pointSize: 56 }
-    FontSizePreviewText { font.pointSize: 64 }
-    FontSizePreviewText { font.pointSize: 72 }
+    FontSizePreviewText { previewFont: view.font; pointSize: 10 }
+    FontSizePreviewText { previewFont: view.font; pointSize: 12 }
+    FontSizePreviewText { previewFont: view.font; pointSize: 14 }
+    FontSizePreviewText { previewFont: view.font; pointSize: 16 }
+    FontSizePreviewText { previewFont: view.font; pointSize: 20 }
+    FontSizePreviewText { previewFont: view.font; pointSize: 24 }
+    FontSizePreviewText { previewFont: view.font; pointSize: 28 }
+    FontSizePreviewText { previewFont: view.font; pointSize: 32 }
+    FontSizePreviewText { previewFont: view.font; pointSize: 40 }
+    FontSizePreviewText { previewFont: view.font; pointSize: 48 }
+    FontSizePreviewText { previewFont: view.font; pointSize: 56 }
+    FontSizePreviewText { previewFont: view.font; pointSize: 64 }
+    FontSizePreviewText { previewFont: view.font; pointSize: 72 }
 }

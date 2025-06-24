@@ -4,8 +4,6 @@
     SPDX-License-Identifier: GPL-3.0-or-later
 */
 import QtQuick
-import QtQuick.Layouts
-import QtQuick.Controls as Controls
 import org.kde.kirigami as Kirigami
 
 Kirigami.Page {
@@ -18,16 +16,16 @@ Kirigami.Page {
     function getFeatures() {
         featureModel = FontScanner.scanFeatures(fontPath, 0);
         axisModel = FontScanner.scanVariableAxes(fontPath, 0);
-
-        console.log(`feature count: ${featureModel.rowCount()}`)
     }
-
-    Component.onCompleted: getFeatures();
 
     FontLoader {
         id: loader
-        source: `file:/${fontPath}`
-        onStatusChanged: getFeatures();
+        source: `file:/${page.fontPath}`
+        onStatusChanged: function() {
+            if (status == FontLoader.Ready) {
+                page.getFeatures();
+            }
+        }
     }
 
     onFontPathChanged: loader.source = `file:/${fontPath}`
@@ -35,15 +33,18 @@ Kirigami.Page {
     title: loader.font.family
 
     FontView {
-        font: loader.font
+        id: fontView
+        font.family: loader.font.family
     }
 
     FeaturesDrawer {
         id: featuresDrawer
         featureModel: page.featureModel
         axisModel: page.axisModel
-        features: loader.font.features
-        variableAxes: loader.font.variableAxes
+
+        onAxisChanged: function(axis, value) {
+            fontView.font.variableAxes[axis] = value;
+        }
     }
 
     actions: [

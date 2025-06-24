@@ -50,6 +50,10 @@ QSet<QString> FontScanner::scanFeaturesRaw(hb_face_t *face)
     return features;
 }
 
+static auto axisPtrLess(const VariableAxis *lhs, const VariableAxis *rhs) {
+    return *lhs < *rhs;
+}
+
 const VariableAxisModel *FontScanner::scanVariableAxes(const QString &path, size_t index)
 {
     hb_face_t *face = hb_face_create_from_file_or_fail(path.toLocal8Bit().data(), index);
@@ -59,7 +63,7 @@ const VariableAxisModel *FontScanner::scanVariableAxes(const QString &path, size
 
     auto axes = scanVariableAxesRaw(face).values();
     hb_face_destroy(face);
-    std::sort(axes.begin(), axes.end());
+    std::sort(axes.begin(), axes.end(), axisPtrLess);
     return new VariableAxisModel(std::move(axes));
 }
 

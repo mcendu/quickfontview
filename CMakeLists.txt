@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.26)
 project(quickfontview)
 ENABLE_TESTING()
 
+set(CMAKE_CXX_STANDARD 20)
+
 find_package(ECM 6.0.0 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 

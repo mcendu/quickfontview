@@ -9,9 +9,10 @@ QHash<int, QByteArray> VariableAxisModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
     roles[TagRole] = "tag";
-    roles[MinValueRole] = "min";
-    roles[MaxValueRole] = "max";
-    roles[DefaultValueRole] = "default";
+    roles[ValueRole] = "value";
+    roles[MinValueRole] = "minValue";
+    roles[MaxValueRole] = "maxValue";
+    roles[DefaultValueRole] = "defaultValue";
     return roles;
 }
 
@@ -35,6 +36,8 @@ QVariant VariableAxisModel::data(const QModelIndex &index, int role) const
     switch (role) {
     case TagRole:
         return axis->tag();
+    case ValueRole:
+        return axis->value();
     case MinValueRole:
         return axis->minValue();
     case MaxValueRole:
@@ -43,5 +46,29 @@ QVariant VariableAxisModel::data(const QModelIndex &index, int role) const
         return axis->defaultValue();
     default:
         return QVariant();
+    }
+}
+
+bool VariableAxisModel::setData(const QModelIndex &index, const QVariant &variant, int role)
+{
+    if (!index.isValid())
+        return false;
+
+    if (index.row() >= m_axes.count()) {
+        return false;
+    }
+
+    if (role == ValueRole) {
+        bool isNumber;
+        qreal value = variant.toReal(&isNumber);
+
+        if (!isNumber)
+            return false;
+
+        m_axes.at(index.row())->setValue(value);
+        dataChanged(index, index, QList<int>{ValueRole});
+        return true;
+    } else {
+        return false;
     }
 }
