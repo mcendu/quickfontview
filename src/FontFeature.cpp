@@ -5,10 +5,44 @@
 */
 #include "FontFeature.h"
 
+#include "Descriptions.h"
+#include <QStringView>
+
+QString FontFeature::description() const
+{
+    // special case Character Variant and Stylistic Set tags to reduce
+    // translator burden
+    if (m_tag.startsWith(QStringLiteral("cv"))) {
+        // check validity of cv.. tag
+        bool isCharacterVariantTag;
+        int variant = QStringView(m_tag).sliced(2).toInt(&isCharacterVariantTag);
+        if (!isCharacterVariantTag)
+            return QString(m_tag);
+
+        return featureTagDescriptions[QStringLiteral("cv01")].toString().arg(variant);
+    } else if (m_tag.startsWith(QStringLiteral("ss"))) {
+        // check validity of ss.. tag
+        bool isStylisticSetTag;
+        int set = QStringView(m_tag).sliced(2).toInt(&isStylisticSetTag);
+        // OpenType standard only defines ss01 - ss20
+        if (!isStylisticSetTag || set > 20)
+            return QString(m_tag);
+
+        return featureTagDescriptions[QStringLiteral("ss01")].toString().arg(set);
+    }
+
+    auto s = featureTagDescriptions.find(m_tag);
+    // bail out to the tag name for unknown tags
+    if (s == featureTagDescriptions.end())
+        return QString(m_tag);
+    return s.value().toString();
+}
+
 QHash<int, QByteArray> FontFeatureModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
     roles[TagRole] = "tag";
+    roles[DescriptionRole] = "description";
     roles[EnabledRole] = "enabled";
     return roles;
 }
@@ -32,6 +66,8 @@ QVariant FontFeatureModel::data(const QModelIndex &index, int role) const
 
     if (role == TagRole) {
         return row->tag();
+    } else if (role == DescriptionRole) {
+        return row->description();
     } else if (role == EnabledRole) {
         return row->enabled();
     } else {

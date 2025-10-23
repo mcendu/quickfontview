@@ -1,11 +1,26 @@
+add_library(libqfv STATIC)
+
+target_sources(libqfv
+    PRIVATE
+    Descriptions.cpp
+    PUBLIC
+    FontFeature.cpp
+    FontScanner.cpp
+    VariableAxis.cpp
+)
+
+target_link_libraries(libqfv
+    PUBLIC
+    ${HARFBUZZ_LIBRARIES}
+    Qt6::Quick
+    Qt6::Qml
+    KF6::I18n
+)
+
 add_executable(quickfontview)
 
 ecm_add_qml_module(quickfontview
     URI info.mcendu.quickfontview
-    SOURCES
-    FontFeature.cpp
-    FontScanner.cpp
-    VariableAxis.cpp
 )
 
 target_sources(quickfontview
@@ -23,7 +38,7 @@ ecm_target_qml_sources(quickfontview
 
 target_link_libraries(quickfontview
     PRIVATE
-    ${HARFBUZZ_LIBRARIES}
+    libqfv
     Qt6::Quick
     Qt6::Qml
     Qt6::Gui

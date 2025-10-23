@@ -9,14 +9,17 @@
 #include <QAbstractListModel>
 #include <QByteArray>
 #include <QtQmlIntegration>
-#include <qcontainerfwd.h>
 #include <utility>
 
+/**
+ * An OpenType feature available in a font.
+ */
 class FontFeature : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString tag READ tag CONSTANT)
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY statusChanged)
+    Q_PROPERTY(QString description READ description CONSTANT)
 private:
     QString m_tag;
     bool m_enabled;
@@ -31,16 +34,30 @@ public:
     {
     }
 
+    /**
+     * Get the feature's tag.
+     */
     const QString &tag() const
     {
         return m_tag;
     }
 
+    /**
+     * Get the human-readable description of the feature.
+     */
+    QString description() const;
+
+    /**
+     * Get whether the feature is enabled.
+     */
     bool enabled() const
     {
         return m_enabled;
     }
 
+    /**
+     * Enable or disable the feature.
+     */
     void setEnabled(bool enabled)
     {
         if (m_enabled != enabled) {
@@ -64,6 +81,7 @@ protected:
 public:
     enum Roles {
         TagRole = Qt::UserRole + 1,
+        DescriptionRole,
         EnabledRole,
     };
 

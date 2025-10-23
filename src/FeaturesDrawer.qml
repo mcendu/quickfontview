@@ -86,11 +86,12 @@ Kirigami.OverlayDrawer {
                 model: drawer.featureModel
                 delegate: QQC.CheckDelegate {
                     required property string tag
+                    required property string description
                     required property bool enabled
                     required property var model
 
                     width: ListView.view.width
-                    text: tag
+                    text: description
 
                     onCheckStateChanged: {
                         model.enabled = checkState == Qt.Checked;
