@@ -15,6 +15,7 @@ target_link_libraries(libqfv
     Qt6::Quick
     Qt6::Qml
     KF6::I18n
+    KF6::I18nQml
 )
 
 add_executable(quickfontview)

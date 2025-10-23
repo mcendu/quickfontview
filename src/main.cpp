@@ -4,8 +4,9 @@
     SPDX-License-Identifier: GPL-3.0-or-later
 */
 #include <KIconTheme>
-#include <KLocalizedContext>
+#include <KLocalization>
 #include <KLocalizedString>
+#include <KLocalizedQmlContext>
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QFileInfo>
@@ -50,7 +51,7 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-    engine.rootContext()->setContextObject(new KLocalizedContext(&engine));
+    KLocalization::setupLocalizedContext(&engine);
     engine.setInitialProperties({
         {QStringLiteral("file"), fontPath},
     });

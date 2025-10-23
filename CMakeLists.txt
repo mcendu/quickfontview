@@ -25,7 +25,7 @@ find_package(Qt6 6.7 REQUIRED COMPONENTS
     Widgets
 )
 
-find_package(KF6 REQUIRED COMPONENTS
+find_package(KF6 6.8 REQUIRED COMPONENTS
     Kirigami
     I18n
     CoreAddons
