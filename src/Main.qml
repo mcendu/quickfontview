@@ -14,7 +14,7 @@ Kirigami.ApplicationWindow {
     required property string file
 
     width: 400
-    height: 300
+    height: 600
 
     // Window title
     // i18nc() makes a string translatable

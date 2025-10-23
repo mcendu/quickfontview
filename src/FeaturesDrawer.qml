@@ -33,6 +33,7 @@ Kirigami.OverlayDrawer {
         required property var model
 
         width: ListView.view.width
+        spacing: 0
 
         QQC.Label {
             text: delegate.description
@@ -60,13 +61,26 @@ Kirigami.OverlayDrawer {
             anchors.rightMargin: 10
 
             Kirigami.Heading {
+                Layout.topMargin: 10
+                Layout.bottomMargin: 4
                 text: i18n("Variable axes")
                 level: 2
+
+                visible: axes.count != 0
+                enabled: axes.count != 0
             }
 
             ListView {
+                id: axes
                 Layout.fillWidth: true
                 Layout.preferredHeight: contentHeight
+                Layout.leftMargin: 10
+                Layout.rightMargin: 10
+                Layout.bottomMargin: 8
+                spacing: 8
+
+                visible: count != 0
+                enabled: count != 0
 
                 model: drawer.axisModel
                 delegate: VariableAxisDelegate {
@@ -78,11 +92,18 @@ Kirigami.OverlayDrawer {
             Kirigami.Heading {
                 text: i18n("OpenType features")
                 level: 2
+
+                visible: features.count != 0
+                enabled: features.count != 0
             }
 
             ListView {
+                id: features
                 Layout.fillWidth: true
                 Layout.preferredHeight: contentHeight
+
+                visible: count != 0
+                enabled: count != 0
 
                 model: drawer.featureModel
                 delegate: QQC.CheckDelegate {
