@@ -5,9 +5,12 @@
 */
 #include "FontScanner.h"
 
+#include "Descriptions.h"
 #include "FontFeature.h"
 #include "VariableAxis.h"
+#include <QChar>
 #include <QHash>
+#include <QLocale>
 #include <QSet>
 #include <QVarLengthArray>
 #include <algorithm>
@@ -80,6 +83,38 @@ const VariableAxisModel *FontScanner::scanVariableAxes(const QString &path, size
     return new VariableAxisModel(std::move(axes));
 }
 
+static QString getAxisDescription(hb_face_t *face, const hb_ot_var_axis_info_t &axis, const QString &tag)
+{
+    // look up our registered axes table
+    auto registered = axisDescriptions.find(tag);
+    if (registered != axisDescriptions.end())
+        return registered.value().toString();
+
+    // failing that, grab a localized description from the font
+    auto languages = QLocale().uiLanguages();
+    // append English as a failsafe
+    languages.append(QStringLiteral("en"));
+
+    auto nameId = axis.name_id;
+    for (const auto &i : languages) {
+        auto languageString = i.toUtf8();
+        auto language = hb_language_from_string(languageString.constData(), languageString.size());
+
+        auto length = hb_ot_name_get_utf16(face, nameId, language, nullptr, nullptr);
+
+        if (length != 0) {
+            length += 1; // "A NUL terminator is always written for convenience"
+            QString name(length, QChar(0));
+            hb_ot_name_get_utf16(face, nameId, language, &length, (uint16_t *)name.data());
+            name.chop(1); // chop NUL
+            return name;
+        }
+    }
+
+    // if font don't provide a description, use the tag itself
+    return tag;
+}
+
 QHash<QString, VariableAxis *> FontScanner::scanVariableAxesRaw(hb_face_t *face)
 {
     if (!hb_ot_var_has_data(face))
@@ -91,12 +126,13 @@ QHash<QString, VariableAxis *> FontScanner::scanVariableAxesRaw(hb_face_t *face)
 
     QHash<QString, VariableAxis *> axes;
 
-    for (const hb_ot_var_axis_info_t &i : axisInfos) {
+    for (const auto &i : axisInfos) {
         char ctag[4];
         hb_tag_to_string(i.tag, ctag);
         auto tag = QString::fromLatin1(ctag, 4);
+        auto description = getAxisDescription(face, i, tag);
 
-        axes.insert(tag, new VariableAxis(tag, i.min_value, i.max_value, i.default_value));
+        axes.insert(tag, new VariableAxis(std::move(tag), std::move(description), i.min_value, i.max_value, i.default_value));
     }
 
     return axes;

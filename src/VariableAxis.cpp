@@ -9,6 +9,7 @@ QHash<int, QByteArray> VariableAxisModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
     roles[TagRole] = "tag";
+    roles[DescriptionRole] = "description";
     roles[ValueRole] = "value";
     roles[MinValueRole] = "minValue";
     roles[MaxValueRole] = "maxValue";
@@ -36,6 +37,8 @@ QVariant VariableAxisModel::data(const QModelIndex &index, int role) const
     switch (role) {
     case TagRole:
         return axis->tag();
+    case DescriptionRole:
+        return axis->description();
     case ValueRole:
         return axis->value();
     case MinValueRole:

@@ -6,6 +6,8 @@
 #include "Descriptions.h"
 
 #include <QStringLiteral>
+#include <qcontainerfwd.h>
+#include <qstringliteral.h>
 
 const QHash<QString, KLocalizedString> featureTagDescriptions{
     {QStringLiteral("aalt"), ki18n("Access All Alternates")},
@@ -134,4 +136,12 @@ const QHash<QString, KLocalizedString> featureTagDescriptions{
     {QStringLiteral("vrt2"), ki18n("Vertical Alternates and Rotation")},
     {QStringLiteral("vrtr"), ki18n("Vertical Alternates for Rotation")},
     {QStringLiteral("zero"), ki18n("Slashed Zero")},
+};
+
+const QHash<QString, KLocalizedString> axisDescriptions{
+    {QStringLiteral("ital"), ki18n("Italic")},
+    {QStringLiteral("opsz"), ki18n("Optical Size")},
+    {QStringLiteral("slnt"), ki18n("Slant")},
+    {QStringLiteral("wdth"), ki18n("Width")},
+    {QStringLiteral("wght"), ki18nc("Thickness of font outlines", "Weight")},
 };

@@ -13,4 +13,7 @@
 /** Table of human-readable feature tag descriptions. */
 extern const QHash<QString, KLocalizedString> featureTagDescriptions;
 
+/** Table of human-readable variation axis descriptions. */
+extern const QHash<QString, KLocalizedString> axisDescriptions;
+
 #endif

@@ -19,12 +19,15 @@ class VariableAxis : public QObject
     QML_ELEMENT
     QML_UNCREATABLE("Use FontScanner to query font features.")
     Q_PROPERTY(QString tag READ tag CONSTANT)
+    Q_PROPERTY(QString description READ description CONSTANT)
     Q_PROPERTY(qreal minValue READ minValue CONSTANT)
     Q_PROPERTY(qreal maxValue READ maxValue CONSTANT)
     Q_PROPERTY(qreal defaultValue READ defaultValue CONSTANT)
     Q_PROPERTY(qreal value READ value WRITE setValue NOTIFY valueChanged)
 private:
     QString m_tag;
+    QString m_description;
+
     qreal m_min;
     qreal m_max;
     qreal m_default;
@@ -34,8 +37,9 @@ Q_SIGNALS:
     void valueChanged(qreal newValue);
 
 public:
-    VariableAxis(QString tag, qreal minValue, qreal maxValue, qreal defaultValue)
+    VariableAxis(QString &&tag, QString &&description, qreal minValue, qreal maxValue, qreal defaultValue)
         : m_tag(tag)
+        , m_description(description)
         , m_min(minValue)
         , m_max(maxValue)
         , m_default(defaultValue)
@@ -44,6 +48,11 @@ public:
     const QString &tag() const
     {
         return m_tag;
+    }
+
+    const QString &description() const
+    {
+        return m_description;
     }
 
     qreal minValue() const
@@ -99,6 +108,7 @@ protected:
 public:
     enum Roles {
         TagRole = Qt::UserRole + 1,
+        DescriptionRole,
         ValueRole,
         MinValueRole,
         MaxValueRole,

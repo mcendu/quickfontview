@@ -28,13 +28,14 @@ Kirigami.OverlayDrawer {
         required property real maxValue
         required property real defaultValue
         required property string tag
+        required property string description
 
         required property var model
 
         width: ListView.view.width
 
         QQC.Label {
-            text: delegate.tag
+            text: delegate.description
         }
 
         QQC.Slider {
